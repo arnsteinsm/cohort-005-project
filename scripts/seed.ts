@@ -2003,6 +2003,60 @@ This course is still in draft while the cluster examples are rewritten against t
     `Created ${countRows(schema.comments)} lesson comments across ${countRows(schema.comments, isNull(schema.comments.parentId))} threads.`
   );
 
+  // ─── Bookmarks and Notes ───
+  // Private to each Student, on lessons in courses they're enrolled in. Emma
+  // has both across two courses, Olivia has a bookmark only, James a note only.
+
+  db.insert(schema.bookmarks)
+    .values([
+      {
+        userId: students[0].id,
+        lessonId: course1LessonIds[2],
+        createdAt: daysAgo(30),
+      },
+      {
+        userId: students[0].id,
+        lessonId: course2LessonIds[1],
+        createdAt: daysAgo(12),
+      },
+      {
+        userId: students[2].id,
+        lessonId: course1LessonIds[0],
+        createdAt: daysAgo(20),
+      },
+    ])
+    .run();
+
+  db.insert(schema.notes)
+    .values([
+      {
+        userId: students[0].id,
+        lessonId: course1LessonIds[2],
+        body: "Use `npx tsc`, not a global install, so the version stays pinned.",
+        createdAt: daysAgo(29),
+        updatedAt: daysAgo(29),
+      },
+      {
+        userId: students[0].id,
+        lessonId: course2LessonIds[1],
+        body: "4xx = client's fault, 5xx = server's fault.\nCome back to the 418 row.",
+        createdAt: daysAgo(12),
+        updatedAt: daysAgo(6),
+      },
+      {
+        userId: students[1].id,
+        lessonId: course1LessonIds[1],
+        body: "Strict mode on from day one.",
+        createdAt: daysAgo(40),
+        updatedAt: daysAgo(40),
+      },
+    ])
+    .run();
+
+  console.log(
+    `Created ${countRows(schema.bookmarks)} bookmarks and ${countRows(schema.notes)} notes.`
+  );
+
   // ─── Lesson Progress ───
 
   // Helper to mark lessons as complete
